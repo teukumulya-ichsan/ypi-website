@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "user_id": "1",
+      "name": "Mulia Ichsan",
+      "email": "ichsan.mulya@outlook.com",
+      "mobile_phone": "+6281260107091",
+      "photo_url": "https://alazhar-asset.oss-ap-southeast-5.aliyuncs.com/berita/saebx.jpg",
+      "device_id": "-",
+      "status": "Active",
+      "last_login": "1/1/2020 06:39:21",
+      "device_os": "Android"
+    }
+  ]
+}

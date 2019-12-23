@@ -1,0 +1,68 @@
+{
+  "name": "ypi-backend",
+  "version": "1.0.0",
+  "description": "YPI backend",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha tests/**/**/*.test.js",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teukumulya-ichsan/ypi-backend.git"
+  },
+  "keywords": [
+    "nodejs",
+    "expressjs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teukumulya-ichsan/ypi-backend.git/issues"
+  },
+  "homepage": "https://github.com/teukumulya-ichsan/ypi-backend.git#readme",
+  "dependencies": {
+    "amqplib": "^0.5.3",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.14.2",
+    "express": "^4.17.1",
+    "express-pino-logger": "^4.0.0",
+    "fastest-validator": "^0.6.17",
+    "http-status-codes": "^1.4.0",
+    "ioredis": "^4.10.0",
+    "module-alias": "^2.2.0",
+    "mysql2": "^2.0.0",
+    "pino": "^5.12.6",
+    "pm2": "^3.5.1",
+    "promise-mysql": "^4.0.4",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^6.1.4",
+    "mock-req-res": "^1.1.1",
+    "nodemon": "^1.19.1",
+    "sinon": "^7.3.2",
+    "sequelize": "^5.19.0",
+    "sequelize-cli": "^5.5.1"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@config": "config",
+    "@common": "modules/common",
+    "@user": "modules/user",
+    "@berita": "modules/berita",
+    "@event": "modules/events",
+    "@categories": "modules/categories",
+    "@comments": "modules/comments",
+    "@likes": "modules/likes"
+  }
+}
