@@ -29,6 +29,7 @@ class BeritaModel {
   }
 
   async create(data) {
+    console.log(data);
     const query = `INSERT into ${this.table} SET ?`;
     const result = await this.dbService.query(query, data);
 

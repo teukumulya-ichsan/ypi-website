@@ -6,6 +6,7 @@ class BeritaService {
   constructor() {
     this.beritaModel = new BeritaModel();
     this.validator = new Validate();
+
     this.schema = {
       judul: {
         type: 'string',

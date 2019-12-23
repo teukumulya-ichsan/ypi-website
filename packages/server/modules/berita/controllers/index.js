@@ -1,5 +1,19 @@
 const BeritaService = require('@berita/services');
 
+const multer = require('multer');
+const path = require('path');
+const bcrypt = require('bcryptjs');
+
+const diskstorage = multer.diskStorage({
+  destination: './assets/images/berita',
+  filename: async function(req, file, cb) {
+    let ext = path.extname(file.originalname);
+    let hashname = await bcrypt.hash(file.originalname, 8);
+    hashname = hashname.substr(0, 5);
+    cb(null, hashname + '-' + Date.now() + ext);
+  }
+});
+
 class BeritaController {
   constructor() {
     this.beritaService = new BeritaService();
@@ -8,6 +22,21 @@ class BeritaController {
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
     this.getBeritaDetail = this.getBeritaDetail.bind(this);
+
+    //* Multer for upload file
+    this.upload = multer({
+      storage: diskstorage,
+      limits: {
+        fileSize: 1000000
+      },
+      fileFilter(req, file, callback) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+          return callback(new Error('Please upload jpg/jpeg/png image'));
+        }
+
+        callback(undefined, true);
+      }
+    });
   }
 
   async index(req, res) {
@@ -16,6 +45,8 @@ class BeritaController {
   }
 
   async create(req, res) {
+    console.log(req.file);
+    req.body.photo_url = req.file.filename || '';
     const saveBerita = await this.beritaService.create(req.body);
 
     res.status(saveBerita.status);
