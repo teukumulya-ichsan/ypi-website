@@ -1,31 +1,31 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import Sidenav from "../../vendor/libs/sidenav";
-import layoutHelpers from "./helpers";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Sidenav from '../../vendor/libs/sidenav';
+import layoutHelpers from './helpers';
 
 class LayoutSidenav extends Component {
   layoutSidenavClasses() {
     let bg = this.props.sidenavBg;
 
     if (
-      this.props.orientation === "horizontal" &&
-      (bg.indexOf(" sidenav-dark") !== -1 ||
-        bg.indexOf(" sidenav-light") !== -1)
+      this.props.orientation === 'horizontal' &&
+      (bg.indexOf(' sidenav-dark') !== -1 ||
+        bg.indexOf(' sidenav-light') !== -1)
     ) {
       bg = bg
-        .replace(" sidenav-dark", "")
-        .replace(" sidenav-light", "")
-        .replace("-darker", "")
-        .replace("-dark", "");
+        .replace(' sidenav-dark', '')
+        .replace(' sidenav-light', '')
+        .replace('-darker', '')
+        .replace('-dark', '');
     }
 
     return (
       `bg-${bg} ` +
-      (this.props.orientation !== "horizontal"
-        ? "layout-sidenav"
-        : "layout-sidenav-horizontal container-p-x flex-grow-0")
+      (this.props.orientation !== 'horizontal'
+        ? 'layout-sidenav'
+        : 'layout-sidenav-horizontal container-p-x flex-grow-0')
     );
   }
 
@@ -41,7 +41,7 @@ class LayoutSidenav extends Component {
   isMenuOpen(url) {
     return (
       this.props.location.pathname.indexOf(url) === 0 &&
-      this.props.orientation !== "horizontal"
+      this.props.orientation !== 'horizontal'
     );
   }
 
@@ -52,7 +52,7 @@ class LayoutSidenav extends Component {
         className={this.layoutSidenavClasses()}
       >
         {/* Brand demo (see src/demo.css) */}
-        {this.props.orientation !== "horizontal" && (
+        {this.props.orientation !== 'horizontal' && (
           <React.Fragment>
             <div className="app-brand demo">
               <span className="app-brand-logo demo bg-primary">
@@ -79,7 +79,7 @@ class LayoutSidenav extends Component {
         {/* Links */}
         <div
           className={`sidenav-inner ${
-            this.props.orientation !== "horizontal" ? "py-1" : ""
+            this.props.orientation !== 'horizontal' ? 'py-1' : ''
           }`}
         >
           {/* Dashboards */}
@@ -91,8 +91,8 @@ class LayoutSidenav extends Component {
           <Sidenav.Menu
             icon="ion ion-md-bookmarks"
             linkText="Berita"
-            active={this.isMenuActive("/")}
-            open={this.isMenuOpen("/")}
+            active={this.isMenuActive('/')}
+            open={this.isMenuOpen('/')}
           >
             <Sidenav.RouterLink to="/berita">Berita</Sidenav.RouterLink>
             <Sidenav.RouterLink to="/berita/category">
@@ -105,8 +105,8 @@ class LayoutSidenav extends Component {
           <Sidenav.Menu
             icon="ion ion-md-bowtie"
             linkText="Event"
-            active={this.isMenuActive("/events")}
-            open={this.isMenuOpen("/events")}
+            active={this.isMenuActive('/events')}
+            open={this.isMenuOpen('/events')}
           >
             <Sidenav.RouterLink to="/events">Event</Sidenav.RouterLink>
             <Sidenav.RouterLink to="/events/category">
@@ -123,13 +123,13 @@ class LayoutSidenav extends Component {
           <Sidenav.Menu
             icon="ion ion-md-chatboxes"
             linkText="Comments"
-            active={this.isMenuActive("/comments")}
-            open={this.isMenuOpen("/commments")}
+            active={this.isMenuActive('/comments')}
+            open={this.isMenuOpen('/commments')}
           >
-            <Sidenav.RouterLink to="comments/berita">
+            <Sidenav.RouterLink to="/comments/berita">
               Comment Berita
             </Sidenav.RouterLink>
-            <Sidenav.RouterLink to="comments/events">
+            <Sidenav.RouterLink to="/comments/events">
               Comment Event
             </Sidenav.RouterLink>
           </Sidenav.Menu>
@@ -137,13 +137,13 @@ class LayoutSidenav extends Component {
           <Sidenav.Menu
             icon="ion ion-md-heart"
             linkText="Likes"
-            active={this.isMenuActive("/likes")}
-            open={this.isMenuOpen("/likes")}
+            active={this.isMenuActive('/likes')}
+            open={this.isMenuOpen('/likes')}
           >
-            <Sidenav.RouterLink to="likes/berita">
+            <Sidenav.RouterLink to="/likes/berita">
               Like Berita
             </Sidenav.RouterLink>
-            <Sidenav.RouterLink to="likes/events">
+            <Sidenav.RouterLink to="/likes/events">
               Like Event
             </Sidenav.RouterLink>
           </Sidenav.Menu>
@@ -157,8 +157,8 @@ class LayoutSidenav extends Component {
           <Sidenav.Menu
             icon="ion ion-md-contacts"
             linkText="Users"
-            active={this.isMenuActive("/users")}
-            open={this.isMenuOpen("/users")}
+            active={this.isMenuActive('/users')}
+            open={this.isMenuOpen('/users')}
           >
             <Sidenav.RouterLink to="/users">User Management</Sidenav.RouterLink>
             <Sidenav.RouterLink to="/account">
@@ -176,11 +176,11 @@ class LayoutSidenav extends Component {
 }
 
 LayoutSidenav.propTypes = {
-  orientation: PropTypes.oneOf(["vertical", "horizontal"])
+  orientation: PropTypes.oneOf(['vertical', 'horizontal'])
 };
 
 LayoutSidenav.defaultProps = {
-  orientation: "vertical"
+  orientation: 'vertical'
 };
 
 export default connect(store => ({

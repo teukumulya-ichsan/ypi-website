@@ -3,9 +3,27 @@ const CommentController = require('@comments/controllers');
 module.exports = app => {
   const commentController = new CommentController();
 
-  app.route('/comments-berita').get(commentController.indexBerita);
+  //* Berita Route
+  app
+    .route('/comments-berita')
+    .get(commentController.indexBerita)
+    .post(commentController.createCommentBerita);
 
-  app.route('/comments-berita/:id').post(commentController.createCommentBerita);
+  app
+    .route('/comments-berita/:id')
+    .get(commentController.getCommentBeritaDetail)
+    .put(commentController.updateCommentBerita)
+    .delete(commentController.deleteCommentBerita);
 
-  app.route('/comments-event').get(commentController.indexEvent);
+  //* Event Route //
+  app
+    .route('/comments-event')
+    .get(commentController.indexEvent)
+    .post(commentController.createCommentEvent);
+
+  app
+    .route('/comments-event/:id')
+    .get(commentController.getCommentEventDetail)
+    .put(commentController.updateCommentEvent)
+    .delete(commentController.deleteCommentEvent);
 };
