@@ -9,7 +9,19 @@
     "packages/*"
   ],
   "scripts": {
-    "client": "yarn workspace client run start", 
+    "client": "yarn workspace client run start",
     "server": "yarn workspace server run start"
+  },
+  "dependencies": {},
+  "_moduleAliases": {
+    "@root": ".",
+    "@config": "packages/server/config",
+    "@common": "packages/server/modules/common",
+    "@user": "packages/server/modules/user",
+    "@berita": "packages/server/modules/berita",
+    "@event": "packages/server/modules/events",
+    "@categories": "packages/server/modules/categories",
+    "@comments": "packages/server/modules/comments",
+    "@likes": "packages/server/modules/likes"
   }
 }
