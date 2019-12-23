@@ -29,14 +29,13 @@ export const titleTemplate = '%s - YPI';
 
 export const defaultRoute = '/';
 export const routes = [
-  //* Pages
+  //* Pages Login
   {
     path: '/login',
     component: lazy(() => import('./components/pages/Login')),
     layout: LayoutBlank
   },
 
-  //* React Pages
   {
     path: '/',
     component: lazy(() => import('./components/Home'))
@@ -45,12 +44,8 @@ export const routes = [
     path: '/users',
     component: lazy(() => import('./components/Users/ListUser'))
   },
-  // {
-  //   path: '/users/form/:id?',
-  //   component: lazy(() => import('./components/Users/UserEdit'))
-  // },
 
-  //  'Berita' route
+  //*  'Berita' route
   {
     path: '/berita',
     component: lazy(() => import('./components/Berita/Index'))
@@ -77,6 +72,7 @@ export const routes = [
     path: '/events/category',
     component: lazy(() => import('./components/Events/Category'))
   },
+
   {
     path: '/comments/berita',
     component: lazy(() => import('./components/Comment/Berita'))
@@ -105,15 +101,5 @@ export const routes = [
   {
     path: '/tags',
     component: lazy(() => import('./components/Tag'))
-  },
-
-  {
-    path: '/seo',
-    component: lazy(() => import('./components/Seo'))
-  },
-
-  {
-    path: '/meta-config',
-    component: lazy(() => import('./components/Config'))
   }
 ];

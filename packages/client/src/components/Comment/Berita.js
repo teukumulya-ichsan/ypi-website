@@ -41,7 +41,7 @@ class CommentBerita extends Component {
         );
 
         if (status === 200) {
-          await this.getCategory();
+          await this.getComment();
           ReactSwal.fire('Deleted!', 'Comment Berhasil dihapus.', 'success');
         } else {
           ReactSwal.fire('Failed!', 'Comment Gagal dihapus.', 'error');
@@ -73,7 +73,7 @@ class CommentBerita extends Component {
       },
       {
         text: 'Id Berita',
-        dataField: 'id_user',
+        dataField: 'id_berita',
         editable: false,
         headerAlign: 'center',
         align: 'center'

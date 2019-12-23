@@ -14,7 +14,8 @@
     "server:add": "yarn workspace server add",
     "client:add": "yarn workspace client add",
     "server:remove": "yarn workspace server remove",
-    "client:remove": "yarn workspace client remove"
+    "client:remove": "yarn workspace client remove",
+    "app": "yarn client yarn server"
   },
   "dependencies": {},
   "_moduleAliases": {

@@ -18,7 +18,7 @@ class CommentBerita extends Component {
   }
 
   getComment = () => {
-    axios.get('http://localhost:4001/comments-events').then(res => {
+    axios.get('http://localhost:4001/comments-event').then(res => {
       this.setState({
         comments: res.data.data
       });
@@ -37,11 +37,11 @@ class CommentBerita extends Component {
     }).then(async result => {
       if (result.value) {
         const { status } = await axios.delete(
-          `http://localhost:4001/comments-berita/${id}`
+          `http://localhost:4001/comments-event/${id}`
         );
 
         if (status === 200) {
-          await this.getCategory();
+          await this.getComment();
           ReactSwal.fire('Deleted!', 'Comment Berhasil dihapus.', 'success');
         } else {
           ReactSwal.fire('Failed!', 'Comment Gagal dihapus.', 'error');
