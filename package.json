@@ -10,7 +10,9 @@
   ],
   "scripts": {
     "client": "yarn workspace client run start",
-    "server": "yarn workspace server run start"
+    "server": "yarn workspace server run start",
+    "server:add": "yarn workspace server add",
+    "client:add": "yarn workspace client add"
   },
   "dependencies": {},
   "_moduleAliases": {
