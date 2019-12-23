@@ -1,0 +1,15 @@
+{
+  "name": "ypi-website",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:teukumulya-ichsan/ypi-website.git",
+  "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "client": "yarn workspace client run start", 
+    "server": "yarn workspace server run start"
+  }
+}
