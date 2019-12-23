@@ -6,7 +6,6 @@ import {
   Redirect
 } from 'react-router-dom';
 import NotFound from './NotFound';
-import Login from './Login';
 
 // Routes
 import { DefaultLayout, titleTemplate, defaultRoute, routes } from '../routes';
@@ -130,7 +129,6 @@ class Router extends Component {
 
           {/* NotFound page */}
           <Route path="*" component={NotFound} />
-          <Route path="/login" component={Login} />
         </Switch>
       </AppRouter>
     );
