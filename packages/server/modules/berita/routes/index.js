@@ -6,7 +6,7 @@ module.exports = app => {
   app
     .route('/berita')
     .get(beritaController.index)
-    .post(beritaController.create);
+    .post(beritaController.upload.single('photo_url'), beritaController.create);
 
   app
     .route('/berita/:id')
