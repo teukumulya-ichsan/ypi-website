@@ -29,6 +29,10 @@ class AuthenticationLoginV2 extends Component {
     e.preventDefault();
   }
 
+  handleSubmit() {
+    console.log(this.state.credentials)
+  }
+
   render() {
     return (
       <div
@@ -96,7 +100,7 @@ class AuthenticationLoginV2 extends Component {
                     className="m-0"
                     id="login-remember-me"
                   />
-                  <Button variant="primary">Sign In</Button>
+                  <Button variant="primary" onClick={this.handleSubmit}>Sign In</Button>
                 </div>
               </form>
               {/* / Form */}
