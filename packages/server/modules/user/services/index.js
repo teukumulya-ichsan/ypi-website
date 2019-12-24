@@ -2,10 +2,13 @@ const UserModel = require('@user/models');
 const brcypt = require('bcryptjs');
 const Validate = require('fastest-validator');
 const HttpStatus = require('http-status-codes');
+const jwt = require('jsonwebtoken');
+
 class UserService {
   constructor() {
     this.userModel = new UserModel();
     this.validator = new Validate();
+    this.getById = this.getById.bind(this);
     this.schema = {
       name: {
         type: 'string',
@@ -23,6 +26,42 @@ class UserService {
 
   async index() {
     return await this.userModel.index();
+  }
+
+  async login(data) {
+    const { email, password } = data
+
+    const user = await this.userModel.getUserByEmail(email);
+    console.log(user.length);
+
+    if (user.length === 0) {
+      return {
+        status: HttpStatus.UNAUTHORIZED,
+        message: 'User not found'
+      }
+    }
+
+    const hashPassword = user[0].password
+    const id = user[0].id
+    
+    const checkPassword = brcypt.compareSync(password, hashPassword); 
+
+    if (checkPassword) {
+      const jwtOptions = {}
+      jwtOptions.secretOrKey = process.env.JWT_SECRET;
+      const payload = { id };
+      const token = jwt.sign(payload, jwtOptions.secretOrKey);
+      return {
+        status: HttpStatus.OK,
+        token: token
+      }
+    }
+
+    return {
+      status: HttpStatus.UNAUTHORIZED,
+      message: 'wrong password',
+    }
+  
   }
 
   async create(data) {

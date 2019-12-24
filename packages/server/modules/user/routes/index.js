@@ -13,4 +13,7 @@ module.exports = app => {
     .get(userController.getById)
     .put(userController.update)
     .delete(userController.fullDelete);
+
+  app.route('/login')
+    .post(userController.login)
 };
