@@ -38,7 +38,7 @@ class UserModel {
   }
 
   async getUserByEmail(email) {
-    const query = `SELECT user_id from ${this.table} where email=?`;
+    const query = `SELECT * from ${this.table} where email=?`;
 
     return await this.dbService.query(query, email);
   }

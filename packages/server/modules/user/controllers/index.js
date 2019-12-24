@@ -4,6 +4,7 @@ class UserController {
   constructor() {
     this.userService = new UserService();
     this.index = this.index.bind(this);
+    this.login = this.login.bind(this);
     this.getById = this.getById.bind(this);
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
@@ -15,6 +16,12 @@ class UserController {
     res.send({
       data: await this.userService.index()
     });
+  }
+
+  async login(req, res) {
+    res.send({
+      data: await this.userService.login(req.body)
+    })
   }
 
   async getById(req, res) {

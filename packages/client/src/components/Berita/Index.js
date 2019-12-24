@@ -30,10 +30,10 @@ class Berita extends Component {
 
   getBerita = () => {
     axios.get('http://localhost:4001/berita').then(res => {
-      // console.log(res.data);
-      this.setState({
-        data: res.data.data
-      });
+      console.log(res.data);
+      // this.setState({
+      //   data: res.data.data
+      // });
     });
   };
 
