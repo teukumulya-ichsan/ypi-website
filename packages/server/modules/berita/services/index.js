@@ -2,9 +2,14 @@ const BeritaModel = require('@berita/models');
 const Validate = require('fastest-validator');
 const HttpStatus = require('http-status-codes');
 
+const UserModel = require('@user/models');
+const CategoryModel = require('@categories/models');
+
 class BeritaService {
   constructor() {
     this.beritaModel = new BeritaModel();
+    this.userModel = new UserModel();
+    this.cateModel = new CategoryModel();
     this.validator = new Validate();
 
     this.schema = {
@@ -39,8 +44,10 @@ class BeritaService {
       is_deleted
     );
 
+    const newData = this.remakeData(beritaData);
+
     return {
-      data: beritaData
+      data: newData
     };
   }
 
@@ -171,9 +178,11 @@ class BeritaService {
   async getById(beritaId) {
     const data = await this.beritaModel.getById(beritaId);
 
+    const newData = this.remakeData(data);
+
     // console.log(data[0].id_kategori);
-    if (data.length > 0) {
-      if (data[0].is_deleted === 1) {
+    if (newData.length > 0) {
+      if (newData[0].is_deleted === 1) {
         return {
           status: HttpStatus.NO_CONTENT,
           message: 'DATA IS DELETED'
@@ -181,7 +190,7 @@ class BeritaService {
       } else {
         return {
           status: HttpStatus.OK,
-          data: data[0]
+          data: newData[0]
         };
       }
     }
@@ -208,6 +217,29 @@ class BeritaService {
       ];
     }
     return true;
+  }
+
+  remakeData(data) {
+    let newData = [];
+    data.forEach(item => {
+      var user_id = item.create_user;
+      item.create_user = {
+        author_id: user_id,
+        author_name: item.author_name
+      };
+      delete item.author_name;
+
+      item.category = {
+        category_id: item.id_kategori,
+        category_name: item.kategori_name
+      };
+
+      delete item.id_kategori;
+      delete item.kategori_name;
+      newData.push(item);
+    });
+
+    return newData;
   }
 }
 

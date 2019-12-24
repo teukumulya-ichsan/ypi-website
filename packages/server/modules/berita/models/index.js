@@ -7,23 +7,24 @@ class BeritaModel {
   }
 
   async index(search, sortBy = 'id', order = 'DESC', status, is_deleted) {
-    let query = `SELECT * from ${this.table}`;
+    // let query = `SELECT * from ${this.table}`;
+    let query = `SELECT tb1.*, s.name AS author_name, bk.nama AS kategori_name from ${this.table} tb1, user s, berita_kategori bk WHERE tb1.create_user=s.user_id AND tb1.id_kategori=bk.id `;
 
     if (is_deleted) {
-      query += ` WHERE is_deleted = 1`;
+      query += ` AND tb1.is_deleted = 1`;
     } else {
       if (status) {
-        query += ` WHERE status = '${status}' AND is_deleted = 0`;
+        query += ` and tb1.status = '${status}' AND tb1.is_deleted = 0`;
       } else {
-        query += ` WHERE status = 'ACTIVE' AND is_deleted = 0`;
+        query += ` and tb1.status = 'ACTIVE' AND tb1.is_deleted = 0`;
       }
     }
 
     if (search) {
-      query += ` AND judul LIKE '%${search}%'`;
+      query += ` AND tb1.judul LIKE '%${search}%'`;
     }
 
-    query += ` ORDER BY ${sortBy} ${order}`;
+    query += ` ORDER BY tb1.${sortBy} ${order}`;
 
     return await this.dbService.query(query);
   }
@@ -54,7 +55,7 @@ class BeritaModel {
   }
 
   async getById(id) {
-    const query = `SELECT * from ${this.table} where id=?`;
+    const query = `SELECT tb1.*, s.name AS author_name, bk.nama AS kategori_name FROM ${this.table} tb1, user s, berita_kategori bk WHERE tb1.create_user=s.user_id and tb1.id_kategori=bk.id AND tb1.id=?`;
 
     return await this.dbService.query(query, id);
   }

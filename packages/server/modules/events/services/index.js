@@ -38,8 +38,10 @@ class EventService {
       is_deleted
     );
 
+    const newData = this.remakeData(eventData);
+
     return {
-      data: eventData
+      data: newData
     };
   }
 
@@ -159,8 +161,11 @@ class EventService {
 
   async getById(eventId) {
     const data = await this.eventModel.getById(eventId);
-    if (data.length > 0) {
-      if (data[0].is_deleted === 1) {
+
+    const newData = this.remakeData(data);
+
+    if (newData.length > 0) {
+      if (newData[0].is_deleted === 1) {
         return {
           status: HttpStatus.NO_CONTENT,
           message: 'DATA IS DELETED'
@@ -168,7 +173,7 @@ class EventService {
       } else {
         return {
           status: HttpStatus.OK,
-          data: data[0]
+          data: newData[0]
         };
       }
     }
@@ -192,6 +197,29 @@ class EventService {
       ];
     }
     return true;
+  }
+
+  remakeData(data) {
+    let newData = [];
+    data.forEach(item => {
+      var user_id = item.create_user;
+      item.create_user = {
+        author_id: user_id,
+        author_name: item.author_name
+      };
+      delete item.author_name;
+
+      item.category = {
+        category_id: item.id_kategori,
+        category_name: item.kategori_name
+      };
+
+      delete item.id_kategori;
+      delete item.kategori_name;
+      newData.push(item);
+    });
+
+    return newData;
   }
 }
 

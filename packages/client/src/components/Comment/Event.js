@@ -7,6 +7,8 @@ import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import '../../vendor/libs/react-bootstrap-table2/react-bootstrap-table2.scss';
+import moment from 'moment';
+
 const { SearchBar } = Search;
 class CommentBerita extends Component {
   state = {
@@ -54,7 +56,9 @@ class CommentBerita extends Component {
 
   render() {
     const isIE10Mode = document['documentMode'] === 10;
-
+    function dateFormatter(cell) {
+      return <span>{moment(cell).format('D MMMM YYYY, H:mm')}</span>;
+    }
     const columns = [
       {
         text: 'ID',
@@ -86,7 +90,9 @@ class CommentBerita extends Component {
 
       {
         text: 'Create Date',
-        dataField: 'create_date'
+        dataField: 'create_date',
+        formatter: dateFormatter,
+        classes: 'text-nowrap'
       },
       {
         text: 'Status',

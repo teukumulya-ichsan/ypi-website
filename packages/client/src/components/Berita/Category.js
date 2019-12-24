@@ -16,6 +16,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import '../../vendor/libs/react-bootstrap-table2/react-bootstrap-table2.scss';
 import ReactSwal from '../../shared/Swall';
+import moment from 'moment';
 
 const { SearchBar } = Search;
 
@@ -143,6 +144,11 @@ class CategoryBerita extends Component {
   render() {
     const isIE10Mode = document['documentMode'] === 10;
     const { formCate, edit } = this.state;
+
+    function dateFormatter(cell) {
+      return <span>{moment(cell).format('D MMMM YYYY, H:mm')}</span>;
+    }
+
     const columns = [
       {
         text: 'ID',
@@ -157,11 +163,12 @@ class CategoryBerita extends Component {
       },
       {
         text: 'Create By',
-        dataField: 'create_user'
+        dataField: 'create_user.creator_name'
       },
       {
         text: 'Create At',
-        dataField: 'create_date'
+        dataField: 'create_date',
+        formatter: dateFormatter
       },
       {
         text: 'Status',
