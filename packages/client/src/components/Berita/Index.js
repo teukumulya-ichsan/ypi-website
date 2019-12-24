@@ -17,6 +17,7 @@ import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
 import { Link } from 'react-router-dom';
 import '../../vendor/libs/react-bootstrap-table2/react-bootstrap-table2.scss';
 import ReactSwal from '../../shared/Swall';
+import moment from 'moment';
 
 const { SearchBar } = Search;
 
@@ -68,6 +69,10 @@ class Berita extends Component {
     const isIE10Mode = document['documentMode'] === 10;
 
     // daftar column / field yang dimasukkan ke dalam react-botstrap-table-next2
+    function dateFormatter(cell) {
+      return <span>{moment(cell).format('D MMMM YYYY, H:mm')}</span>;
+    }
+
     const columns = [
       {
         text: 'ID',
@@ -105,11 +110,13 @@ class Berita extends Component {
         dataField: 'create_date',
         sort: true,
         editable: false,
-        classes: 'text-nowrap'
+        classes: 'text-nowrap',
+        formatter: dateFormatter
       },
+
       {
         text: 'Category',
-        dataField: 'id_kategori',
+        dataField: 'category.category_id',
         sort: true,
         editable: false,
         // editor: {
@@ -120,7 +127,7 @@ class Berita extends Component {
         //   ]
         // },
         formatter: (cell, row) => {
-          switch (row.id_kategori) {
+          switch (row.category.category_id) {
             case 1:
               return (
                 <Badge pill variant="danger">
@@ -205,10 +212,13 @@ class Berita extends Component {
                   alt="Card image cap"
                 />
                 <Card.Body>
-                  <Card.Title as="h4">Author : {data.create_user} </Card.Title>
+                  <Card.Title as="h4">
+                    Author : {data.create_user.author_name}
+                  </Card.Title>
 
                   <Card.Text className="small text-muted">
-                    Terakhir di update pada tanggal {data.edit_date}
+                    Terakhir di update pada tanggal{' '}
+                    {moment(data.edit_date).format('D MMMM YYYY, H:mm')}
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -220,13 +230,17 @@ class Berita extends Component {
                 className="card-hover border-0 mb-3"
               >
                 <Card.Header>
-                  Dibuat pada tanggal {data.create_date}
+                  Dibuat pada tanggal{' '}
+                  {moment(data.create_date).format('D MMMM YYYY, H:mm')}
                 </Card.Header>
                 <Card.Body bg="white">
                   <Card.Title as="h4">
-                    Kategori : {data.id_kategori}{' '}
+                    Kategori : {data.category.category_name}
                   </Card.Title>
-                  <Card.Text>{data.konten}</Card.Text>
+                  <Card.Text>{data.konten} </Card.Text>
+                  {/* <Card.Text>
+                    dangerouslySetInnerHTML={{ __html: data.konten }}
+                  </Card.Text> */}
                 </Card.Body>
               </Card>
             </Col>

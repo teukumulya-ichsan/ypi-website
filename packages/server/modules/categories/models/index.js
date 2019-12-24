@@ -8,10 +8,10 @@ class CategoryModel {
   }
   // ----------------------------- BERITA ------------------------//
   async indexBerita(search, sortBy = 'id', order = 'ASC') {
-    let query = `SELECT * from ${this.cate_berita}`;
+    let query = `SELECT tb1.*, s.name AS creator_name from ${this.cate_berita} tb1, user s WHERE tb1.create_user=s.user_id`;
 
     if (search) {
-      query += ` AND nama LIKE '%${search}%'`;
+      query += ` AND tb1.nama LIKE '%${search}%'`;
     }
 
     query += ` ORDER BY ${sortBy} ${order}`;
@@ -20,7 +20,7 @@ class CategoryModel {
   }
 
   async getCateBeritaById(id) {
-    const query = `SELECT * from ${this.cate_berita} where id=?`;
+    const query = `SELECT tb1.*, s.name AS creator_name from ${this.cate_berita} tb1, user s WHERE tb1.create_user=s.user_id AND tb1.id=?`;
 
     return await this.dbService.query(query, id);
   }
@@ -48,10 +48,10 @@ class CategoryModel {
 
   // ----------------------------- EVENT ------------------------//
   async indexEvent(search, sortBy = 'id', order = 'ASC') {
-    let query = `SELECT * from ${this.cate_event}`;
+    let query = `SELECT tb1.*, s.name AS creator_name from ${this.cate_event} tb1, user s WHERE tb1.create_user=s.user_id`;
 
     if (search) {
-      query += ` AND nama LIKE '%${search}%'`;
+      query += ` AND tb1.nama LIKE '%${search}%'`;
     }
 
     query += ` ORDER BY ${sortBy} ${order}`;
@@ -60,7 +60,7 @@ class CategoryModel {
   }
 
   async getCateEventById(id) {
-    const query = `SELECT * from ${this.cate_event} where id=?`;
+    const query = `SELECT tb1.*, s.name AS creator_name from ${this.cate_event} tb1, user s WHERE tb1.create_user=s.user_id AND tb1.id=?`;
 
     return await this.dbService.query(query, id);
   }

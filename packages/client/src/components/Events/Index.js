@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import '../../vendor/libs/react-bootstrap-table2/react-bootstrap-table2.scss';
 import axios from 'axios';
 import ReactSwal from '../../shared/Swall';
-
+import moment from 'moment';
 const { SearchBar } = Search;
 
 class Events extends Component {
@@ -68,6 +68,9 @@ class Events extends Component {
   render() {
     const isIE10Mode = document['documentMode'] === 10;
 
+    function dateFormatter(cell) {
+      return <span>{moment(cell).format('D MMMM YYYY, H:mm')}</span>;
+    }
     // daftar column / field yang dimasukkan ke dalam react-botstrap-table-next2
     const columns = [
       {
@@ -102,30 +105,33 @@ class Events extends Component {
         dataField: 'event_mulai',
         sort: true,
         editable: false,
-        classes: 'text-nowrap'
+        classes: 'text-nowrap',
+        formatter: dateFormatter
       },
       {
         text: 'Event Selesai',
         dataField: 'event_selesai',
         sort: true,
         editable: false,
-        classes: 'text-nowrap'
+        classes: 'text-nowrap',
+        formatter: dateFormatter
       },
       {
         text: 'Dibuat Pada',
         dataField: 'create_date',
         sort: true,
         editable: false,
-        classes: 'text-nowrap'
+        classes: 'text-nowrap',
+        formatter: dateFormatter
       },
       {
         text: 'Category',
-        dataField: 'id_kategori',
+        dataField: 'category.category_id',
         sort: true,
         editable: false,
 
         formatter: (cell, row) => {
-          switch (row.id_kategori) {
+          switch (row.category.category_id) {
             case 1:
               return (
                 <Badge pill variant="danger">
@@ -188,11 +194,12 @@ class Events extends Component {
                 />
                 <Card.Body>
                   <Card.Title as="h4">
-                    Author : {events.create_user}{' '}
+                    Author : {events.create_user.author_name}
                   </Card.Title>
 
                   <Card.Text className="small text-muted">
-                    Terakhir di update pada tanggal {events.edit_date}
+                    Terakhir di update pada tanggal{' '}
+                    {moment(events.edit_date).format('D MMMM YYYY, H:mm')}
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -204,11 +211,12 @@ class Events extends Component {
                 className="card-hover border-0 mb-3"
               >
                 <Card.Header>
-                  Dibuat pada tanggal {events.create_date}
+                  Dibuat pada tanggal{' '}
+                  {moment(events.create_date).format('D MMMM YYYY, H:mm')}ZZ
                 </Card.Header>
                 <Card.Body bg="white">
                   <Card.Title as="h4">
-                    Kategori : {events.id_kategori}{' '}
+                    Kategori : {events.category.category_name}
                   </Card.Title>
                   <Card.Text>{events.konten}</Card.Text>
                 </Card.Body>

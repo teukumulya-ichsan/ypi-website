@@ -30,8 +30,10 @@ class CategoryService {
       status
     );
 
+    const newData = this.remakeData(cateData);
+
     return {
-      data: cateData
+      data: newData
     };
   }
 
@@ -128,10 +130,12 @@ class CategoryService {
   async getCateBeritaById(cateId) {
     const data = await this.categoryModel.getCateBeritaById(cateId);
 
-    if (data.length > 0) {
+    const newData = this.remakeData(data);
+
+    if (newData.length > 0) {
       return {
         status: HttpStatus.OK,
-        data: data[0]
+        data: newData[0]
       };
     }
 
@@ -156,8 +160,10 @@ class CategoryService {
       status
     );
 
+    const newData = this.remakeData(cateData);
+
     return {
-      data: cateData
+      data: newData
     };
   }
 
@@ -254,10 +260,12 @@ class CategoryService {
   async getCateEventById(cateId) {
     const data = await this.categoryModel.getCateEventById(cateId);
 
-    if (data.length > 0) {
+    const newData = this.remakeData(data);
+
+    if (newData.length > 0) {
       return {
         status: HttpStatus.OK,
-        data: data[0]
+        data: newData[0]
       };
     }
 
@@ -265,6 +273,24 @@ class CategoryService {
       status: HttpStatus.NO_CONTENT,
       message: 'DATA NOT FOUND'
     };
+  }
+
+  //* REMAKE DATA RESPONSE //
+
+  remakeData(data) {
+    let newData = [];
+    data.forEach(item => {
+      var user_id = item.create_user;
+      item.create_user = {
+        author_id: user_id,
+        creator_name: item.creator_name
+      };
+      delete item.creator_name;
+
+      newData.push(item);
+    });
+
+    return newData;
   }
 }
 
