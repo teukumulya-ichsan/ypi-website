@@ -9,20 +9,21 @@ class Login extends Component {
   //   super(props);
   //   props.setTitle('Login');
 
-    state = {
-      credentials: {
-        email: 'chibaxp.tech@gmail.com',
-        password: 'error404',
-        rememberMe: false
-      },
-      redirect: false,
-    };
+  state = {
+    credentials: {
+      email: '',
+      password: '',
+      rememberMe: false
+    },
+    redirect: false
+  };
 
   onValueChange({ target }) {
     this.setState({
       credentials: {
         ...this.state.credentials,
-        [target.name]: target.name === 'rememberMe' ? target.checked : target.value
+        [target.name]:
+          target.name === 'rememberMe' ? target.checked : target.value
       }
     });
   }
@@ -32,23 +33,26 @@ class Login extends Component {
   }
 
   handleSubmit(e) {
-    e.preventDefault()
-    const { email, password } = this.state.credentials
-    axios.post(`http://localhost:4001/login`, { email, password })
+    e.preventDefault();
+    const { email, password } = this.state.credentials;
+    axios
+      .post(`http://localhost:4001/login`, { email, password })
       .then(response => {
-        const { data: { token } } = response.data
-        if(response.status === 200 && token) {
-          localStorage.setItem('_token', token)
-          this.setState({ redirect: true })
+        const {
+          data: { token }
+        } = response.data;
+        if (response.status === 200 && token) {
+          localStorage.setItem('_token', token);
+          this.setState({ redirect: true });
         }
-      })
+      });
   }
 
   render() {
     if (this.state.redirect) {
       return <Redirect to="/berita" />;
     }
-    
+
     return (
       <div
         className="authentication-wrapper authentication-2 ui-bg-cover ui-bg-overlay-container px-4"
@@ -117,7 +121,9 @@ class Login extends Component {
                     className="m-0"
                     id="login-remember-me"
                   />
-                  <Button variant="primary" onClick={e => this.handleSubmit(e)}>Sign In</Button>
+                  <Button variant="primary" onClick={e => this.handleSubmit(e)}>
+                    Sign In
+                  </Button>
                 </div>
               </form>
               {/* / Form */}
