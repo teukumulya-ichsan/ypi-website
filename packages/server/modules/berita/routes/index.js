@@ -1,11 +1,11 @@
 const BeritaController = require('@berita/controllers');
 
-module.exports = app => {
+module.exports = (app, passport) => {
   const beritaController = new BeritaController();
 
   app
     .route('/berita')
-    .get(beritaController.index)
+    .get(passport.authenticate('jwt', { session: false }), beritaController.index)
     .post(beritaController.upload.single('photo_url'), beritaController.create);
 
   app

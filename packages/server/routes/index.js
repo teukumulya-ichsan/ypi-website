@@ -15,7 +15,7 @@ module.exports = (app, passport) => {
   });
 
   userRoute(app);
-  beritaRoute(app);
+  beritaRoute(app, passport);
   eventRoute(app);
   categoryRoute(app);
   commentsRoute(app);
