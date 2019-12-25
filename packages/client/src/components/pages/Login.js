@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 import '../../vendor/styles/pages/authentication.scss';
 
-class AuthenticationLoginV2 extends Component {
-  constructor(props) {
-    super(props);
-    props.setTitle('Login');
+class Login extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   props.setTitle('Login');
 
-    this.state = {
+    state = {
       credentials: {
-        email: '',
-        password: '',
+        email: 'chibaxp.tech@gmail.com',
+        password: 'error404',
         rememberMe: false
-      }
+      },
+      redirect: false,
     };
-  }
 
-  onValueChange(field, e) {
+  onValueChange({ target }) {
     this.setState({
       credentials: {
         ...this.state.credentials,
-        [field]: field === 'rememberMe' ? e.target.checked : e.target.value
+        [target.name]: target.name === 'rememberMe' ? target.checked : target.value
       }
     });
   }
@@ -29,11 +31,24 @@ class AuthenticationLoginV2 extends Component {
     e.preventDefault();
   }
 
-  handleSubmit() {
-    console.log(this.state.credentials)
+  handleSubmit(e) {
+    e.preventDefault()
+    const { email, password } = this.state.credentials
+    axios.post(`http://localhost:4001/login`, { email, password })
+      .then(response => {
+        const { data: { token } } = response.data
+        if(response.status === 200 && token) {
+          localStorage.setItem('_token', token)
+          this.setState({ redirect: true })
+        }
+      })
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/berita" />;
+    }
+    
     return (
       <div
         className="authentication-wrapper authentication-2 ui-bg-cover ui-bg-overlay-container px-4"
@@ -69,7 +84,8 @@ class AuthenticationLoginV2 extends Component {
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     value={this.state.credentials.email}
-                    onChange={e => this.onValueChange('email', e)}
+                    onChange={e => this.onValueChange(e)}
+                    name="email"
                   />
                 </Form.Group>
                 <Form.Group>
@@ -86,7 +102,8 @@ class AuthenticationLoginV2 extends Component {
                   <Form.Control
                     type="password"
                     value={this.state.credentials.password}
-                    onChange={e => this.onValueChange('password', e)}
+                    onChange={e => this.onValueChange(e)}
+                    name="password"
                   />
                 </Form.Group>
 
@@ -100,7 +117,7 @@ class AuthenticationLoginV2 extends Component {
                     className="m-0"
                     id="login-remember-me"
                   />
-                  <Button variant="primary" onClick={this.handleSubmit}>Sign In</Button>
+                  <Button variant="primary" onClick={e => this.handleSubmit(e)}>Sign In</Button>
                 </div>
               </form>
               {/* / Form */}
@@ -112,4 +129,4 @@ class AuthenticationLoginV2 extends Component {
   }
 }
 
-export default AuthenticationLoginV2;
+export default Login;
