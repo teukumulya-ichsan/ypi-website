@@ -9,6 +9,7 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "concurrently \"yarn client\" \"yarn server\"",
     "client": "yarn workspace client run start",
     "server": "yarn workspace server run start",
     "server:add": "yarn workspace server add",
@@ -17,7 +18,9 @@
     "client:remove": "yarn workspace client remove",
     "app": "yarn client yarn server"
   },
-  "dependencies": {},
+  "dependencies": {
+    "concurrently": "^5.0.2"
+  },
   "_moduleAliases": {
     "@root": ".",
     "@config": "packages/server/config",
