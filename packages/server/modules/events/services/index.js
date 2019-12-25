@@ -2,9 +2,14 @@ const EventModel = require('@event/models');
 const Validate = require('fastest-validator');
 const HttpStatus = require('http-status-codes');
 
+const UserModel = require('@user/models');
+const CategoryModel = require('@categories/models');
+const fs = require('fs');
 class EventService {
   constructor() {
     this.eventModel = new EventModel();
+    this.userModel = new UserModel();
+    this.cateModel = new CategoryModel();
     this.validator = new Validate();
     this.schema = {
       judul: {
@@ -74,17 +79,30 @@ class EventService {
     };
   }
 
-  async update(eventId, eventData) {
+  async update(eventId, { body, file }) {
     if (!eventId) {
       return {
         status: HttpStatus.BAD_REQUEST,
-        message: 'eventID is required'
+        message: 'eventId is required!'
       };
     }
 
-    const existEvent = await this.eventModel.getById(eventId);
-    if (existEvent.length > 0) {
+    if (body.photo_url === '' || file) {
+      if (body.photo_url_lama !== '') {
+        fs.unlinkSync(
+          `${__dirname}/../../../../client/public/img/events/${body.photo_url_lama}`
+        );
+      }
+
+      body.photo_url = file ? file.filename : body.photo_url;
+    } else {
+      body.photo_url = body.photo_url_lama;
+    }
+
+    const existsID = await this.eventModel.getById(eventId);
+    if (existsID.length > 0) {
       const isDataValid = await this.dataValidation(eventId);
+      // console.log(isDataValid);
       if (isDataValid !== true) {
         return {
           status: HttpStatus.BAD_REQUEST,
@@ -94,6 +112,10 @@ class EventService {
           }
         };
       } else {
+        delete body.category;
+        delete body.photo_url_lama;
+        const eventData = body;
+
         const updatedEvent = await this.eventModel.update(eventId, eventData);
         if (updatedEvent.affectedRows !== 1) {
           return {
@@ -101,21 +123,13 @@ class EventService {
             message: 'Internal Server Error'
           };
         }
-      }
 
-      return {
-        status: HttpStatus.OK,
-        message: 'Event berhasil di Update'
-      };
+        return {
+          status: HttpStatus.OK,
+          message: 'Event Berhasil di Update'
+        };
+      }
     }
-
-    return {
-      status: HttpStatus.BAD_REQUEST,
-      error: {
-        error_code: 'BAD_REQUEST',
-        message: 'UNKNOWN ID'
-      }
-    };
   }
 
   async delete(eventId) {

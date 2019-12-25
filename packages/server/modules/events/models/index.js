@@ -38,6 +38,7 @@ class EventModel {
   }
 
   async update(eventId, data) {
+    console.log(data);
     const query = `UPDATE ${this.table}
                    SET ?
                    WHERE id=?`;

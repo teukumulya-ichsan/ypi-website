@@ -7,7 +7,7 @@ import Loader from './shared/Loader';
 import Layout from './shared/layouts/Layout';
 import LayoutBlank from './shared/layouts/LayoutBlank';
 
-import Category from './components/Berita/Category';
+// import Category from './components/Berita/Category';
 
 // Lazy load component
 const lazy = cb =>

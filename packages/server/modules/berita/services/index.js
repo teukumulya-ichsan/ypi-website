@@ -115,6 +115,7 @@ class BeritaService {
           }
         };
       } else {
+        delete body.category;
         delete body.photo_url_lama;
         const beritaData = body;
 

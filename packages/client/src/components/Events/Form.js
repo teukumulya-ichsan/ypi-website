@@ -23,11 +23,13 @@ const ReactQuill = loadable(
 
 class FormEvent extends Component {
   state = {
-    eventData: { konten: '' },
+    eventData: { konten: '', category: { category_id: '' } },
     eventEdit: {},
     mainFileSelect: null,
     edit: false,
     redirect: false,
+    preview: `${process.env.PUBLIC_URL}/img/no-img.png`,
+    category: [],
     startDate: new Date(),
     endDate: moment()
       .add(5, 'days')
@@ -35,15 +37,38 @@ class FormEvent extends Component {
   };
 
   componentDidMount = async () => {
+    this.getCategory();
     if (this.props.match.params.id) {
       const { id } = this.props.match.params;
       const { data } = await Axios.get(`http://localhost:4001/events/${id}`);
 
-      //   console.log(data);
       if (data.status === 200) {
-        this.setState({ eventData: data.data, edit: true });
+        let preview =
+          data.data.photo_url !== ''
+            ? 'events/' + data.data.photo_url
+            : 'no-img.png';
+
+        this.setState({
+          eventData: {
+            ...data.data,
+            id_kategori: data.data.category.category_id
+          },
+          preview: `${process.env.PUBLIC_URL}/img/` + preview,
+          edit: true,
+
+          eventEdit: { photo_url_lama: data.data.photo_url }
+        });
       }
     }
+  };
+
+  getCategory = () => {
+    Axios.get('http://localhost:4001/category-event').then(res => {
+      // console.log(res.data);/
+      this.setState({
+        category: res.data.data
+      });
+    });
   };
 
   onValueChange = ({ target }) => {
@@ -64,24 +89,6 @@ class FormEvent extends Component {
     }
   };
 
-  handleChange = date => {
-    this.setDates({ startDate: date });
-  };
-
-  setDates = ({
-    startDate = this.state.startDate,
-    endDate = this.state.endDate
-  }) => {
-    if (moment(startDate).isAfter(endDate)) {
-      endDate = startDate;
-    }
-
-    this.setState({
-      startDate,
-      endDate
-    });
-  };
-
   onValueChangeContent = value => {
     this.setState({
       eventData: {
@@ -100,6 +107,59 @@ class FormEvent extends Component {
     }
   };
 
+  onFileChange = e => {
+    if (e.target.files.length) {
+      this.setState({
+        eventData: {
+          ...this.state.eventData,
+          photo_url: e.target.files[0]
+        },
+        preview: URL.createObjectURL(e.target.files[0])
+      });
+    } else {
+      this.setState({
+        eventData: {
+          ...this.state.eventData,
+          photo_url: ''
+        },
+        preview: `${process.env.PUBLIC_URL}/img/no-img.png`
+      });
+    }
+
+    if (this.state.edit) {
+      if (e.target.files.length) {
+        this.setState({
+          eventEdit: {
+            ...this.state.eventEdit,
+            photo_url: e.target.files[0]
+          },
+          preview: URL.createObjectURL(e.target.files[0])
+        });
+      }
+    }
+  };
+
+  //! FOR INPUT TIME DATE
+  handleChange = date => {
+    this.setDates({ startDate: date });
+  };
+
+  setDates = ({
+    startDate = this.state.startDate,
+    endDate = this.state.endDate
+  }) => {
+    if (moment(startDate).isAfter(endDate)) {
+      endDate = startDate;
+    }
+
+    this.setState({
+      startDate,
+      endDate
+    });
+
+    console.log(startDate, endDate);
+  };
+
   // onFileChange = e => {
   //   if (e.target.files.length) {
   //     this.setState({ mainFileSelect: e.target.files[0] });
@@ -110,17 +170,35 @@ class FormEvent extends Component {
   handleSubmit = async status => {
     const { eventData, edit, eventEdit } = this.state;
     let sendData = {};
+    let formData = new FormData();
+
     if (!edit) {
-      sendData = await Axios.post('http://localhost:4001/events', {
-        ...eventData,
-        status
+      delete eventData.category;
+      Object.keys(eventData).forEach(item => {
+        formData.append(item, eventData[item]);
+      });
+      formData.append('status', status);
+
+      sendData = await Axios.post('http://localhost:4001/events', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
     } else {
+      console.log('EventEDIT:', eventEdit);
+      Object.keys(eventEdit).forEach(item => {
+        console.log(eventEdit[item]);
+        formData.append(item, eventEdit[item]);
+      });
+      formData.append('status', status);
+      console.log(formData);
       sendData = await Axios.put(
         `http://localhost:4001/events/${eventData.id}`,
+        formData,
         {
-          ...eventEdit,
-          status
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
       );
     }
@@ -142,7 +220,7 @@ class FormEvent extends Component {
     e.preventDefault();
   };
   render() {
-    const { eventData, redirect, edit } = this.state;
+    const { eventData, redirect, edit, preview } = this.state;
 
     const isIE10Mode = document['documentMode'] === 10;
     const modules = {
@@ -211,7 +289,7 @@ class FormEvent extends Component {
                   width: '150px',
                   height: '130px',
                   backgroundSize: 'cover',
-                  backgroundImage: `url('${process.env.PUBLIC_URL}/img/no-img.png')`
+                  backgroundImage: `url('${preview}')`
                 }}
               />
               <Media.Body className="ml-3">
@@ -225,14 +303,30 @@ class FormEvent extends Component {
                   />
                   <span
                     className={`custom-file-label ${
-                      this.state.mainFileSelect ? '' : 'text-muted'
+                      eventData.photo_url ? '' : 'text-muted'
                     }`}
                   >
-                    {this.state.mainFileSelect
-                      ? this.state.mainFileSelect.name
+                    {eventData.photo_url
+                      ? eventData.photo_url.name
                       : 'Select file...'}
                   </span>
                 </label>
+                <div style={{ marginTop: '10px' }}>
+                  <Button
+                    variant="outline-info"
+                    onClick={() =>
+                      this.setState({
+                        preview: `${process.env.PUBLIC_URL}/img/no-img.png`,
+                        eventEdit: {
+                          ...this.state.eventEdit,
+                          photo_url: ''
+                        }
+                      })
+                    }
+                  >
+                    Reset
+                  </Button>
+                </div>
               </Media.Body>
             </Media>
 
@@ -246,8 +340,11 @@ class FormEvent extends Component {
                 name="id_kategori"
               >
                 <option value="">Pilih Kategori Event</option>
-                <option value="1">Event Umum</option>
-                <option value="2">Kajian</option>
+                {this.state.category.map(item => (
+                  <option value={item.id} key={item.id}>
+                    {item.nama}
+                  </option>
+                ))}
               </Form.Control>
             </Form.Group>
 
@@ -260,7 +357,7 @@ class FormEvent extends Component {
                       className="form-control"
                       name="event_mulai"
                       calendarClassName="react-datepicker--with-time"
-                      selected={this.state.startDate}
+                      selected={new Date(this.state.startDate)}
                       onChange={this.handleChange}
                       withPortal
                       showTimeSelect
