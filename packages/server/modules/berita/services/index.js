@@ -4,6 +4,7 @@ const HttpStatus = require('http-status-codes');
 
 const UserModel = require('@user/models');
 const CategoryModel = require('@categories/models');
+const fs = require('fs');
 
 class BeritaService {
   constructor() {
@@ -82,12 +83,23 @@ class BeritaService {
     };
   }
 
-  async update(beritaId, beritaData) {
+  async update(beritaId, { body, file }) {
     if (!beritaId) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'beritaId is required!'
       };
+    }
+    if (body.photo_url === '' || file) {
+      if (body.photo_url_lama !== '') {
+        fs.unlinkSync(
+          `${__dirname}/../../../../client/public/img/berita/${body.photo_url_lama}`
+        );
+      }
+
+      body.photo_url = file ? file.filename : body.photo_url;
+    } else {
+      body.photo_url = body.photo_url_lama;
     }
 
     const existsID = await this.beritaModel.getById(beritaId);
@@ -103,6 +115,9 @@ class BeritaService {
           }
         };
       } else {
+        delete body.photo_url_lama;
+        const beritaData = body;
+
         const updatedBerita = await this.beritaModel.update(
           beritaId,
           beritaData

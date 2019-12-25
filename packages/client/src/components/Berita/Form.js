@@ -21,20 +21,32 @@ const ReactQuill = loadable(
 
 class FormBerita extends Component {
   state = {
-    articleData: { konten: '' },
+    articleData: { konten: '', category: { category_id: '' } },
     articleEdit: {},
     mainFileSelect: null,
     edit: false,
-    redirect: false
+    redirect: false,
+    preview: `${process.env.PUBLIC_URL}/img/no-img.png`
   };
 
   componentDidMount = async () => {
     if (this.props.match.params.id) {
       const { id } = this.props.match.params;
       const { data } = await axios.get(`http://localhost:4001/berita/${id}`);
-      // console.log(data);
+
       if (data.status === 200) {
-        this.setState({ articleData: data.data, edit: true });
+        let preview =
+          data.data.photo_url !== ''
+            ? 'berita/' + data.data.photo_url
+            : 'no-img.png';
+
+        this.setState({
+          articleData: data.data,
+          preview: `${process.env.PUBLIC_URL}/img/` + preview,
+          edit: true,
+
+          articleEdit: { photo_url_lama: data.data.photo_url }
+        });
       }
     }
   };
@@ -74,38 +86,75 @@ class FormBerita extends Component {
     }
   };
 
-  // onFileChange = e => {
-  //   if (e.target.files.length) {
-  //     this.setState({ mainFileSelect: e.target.files[0] });
-  //   } else {
-  //     this.setState({ mainFileSelect: null });
-  //   }
-  // };
+  onFileChange = e => {
+    if (e.target.files.length) {
+      this.setState({
+        articleData: {
+          ...this.state.articleData,
+          photo_url: e.target.files[0]
+        },
+        preview: URL.createObjectURL(e.target.files[0])
+      });
+    } else {
+      this.setState({
+        articleData: {
+          ...this.state.articleData,
+          photo_url: ''
+        },
+        preview: `${process.env.PUBLIC_URL}/img/no-img.png`
+      });
+    }
+
+    if (this.state.edit) {
+      if (e.target.files.length) {
+        this.setState({
+          articleEdit: {
+            ...this.state.articleEdit,
+            photo_url: e.target.files[0]
+          },
+          preview: URL.createObjectURL(e.target.files[0])
+        });
+      }
+    }
+  };
 
   handleSubmit = async status => {
     const { articleData, edit, articleEdit } = this.state;
     let sendData = {};
+    let formData = new FormData();
+
     if (!edit) {
-      sendData = await axios.post('http://localhost:4001/berita', {
-        ...articleData,
-        status
+      Object.keys(articleData).forEach(item => {
+        formData.append(item, articleData[item]);
+      });
+      formData.append('status', status);
+
+      sendData = await axios.post('http://localhost:4001/berita', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
     } else {
-      // console.log(articleEdit);
+      Object.keys(articleEdit).forEach(item => {
+        formData.append(item, articleEdit[item]);
+      });
+      formData.append('status', status);
+
       sendData = await axios.put(
         `http://localhost:4001/berita/${articleData.id}`,
+        formData,
         {
-          ...articleEdit,
-          status
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
       );
     }
-    // console.log(sendData.data.data.message);
+
     if (sendData.status === 200) {
       await ReactSwal.fire('Berhasil!', sendData.data.data.message, 'success');
       this.setState({ redirect: true });
     } else {
-      // console.log(sendData);
       await ReactSwal.fire('Error', sendData.data.data.error, 'error');
       this.setState({ redirect: true });
     }
@@ -116,9 +165,10 @@ class FormBerita extends Component {
   };
 
   render() {
-    const { articleData, redirect, edit } = this.state;
+    const { articleData, redirect, edit, preview } = this.state;
 
     const isIE10Mode = document['documentMode'] === 10;
+
     const modules = {
       toolbar: [
         [{ header: [1, 2, 3, 4, 5, 6, false] }, { font: [] }, { size: [] }],
@@ -214,7 +264,7 @@ class FormBerita extends Component {
                   width: '150px',
                   height: '130px',
                   backgroundSize: 'cover',
-                  backgroundImage: `url('${process.env.PUBLIC_URL}/img/no-img.png')`
+                  backgroundImage: `url('${preview}')`
                 }}
               />
               <Media.Body className="ml-3">
@@ -228,21 +278,39 @@ class FormBerita extends Component {
                   />
                   <span
                     className={`custom-file-label ${
-                      this.state.mainFileSelect ? '' : 'text-muted'
+                      articleData.photo_url ? '' : 'text-muted'
                     }`}
                   >
-                    {this.state.mainFileSelect
-                      ? this.state.mainFileSelect.name
+                    {articleData.photo_url
+                      ? articleData.photo_url.name
                       : 'Select file...'}
                   </span>
                 </label>
+
+                <div style={{ marginTop: '10px' }}>
+                  <Button
+                    variant="outline-info"
+                    onClick={() =>
+                      this.setState({
+                        preview: `${process.env.PUBLIC_URL}/img/no-img.png`,
+                        articleEdit: {
+                          ...this.state.articleEdit,
+                          photo_url: ''
+                        }
+                      })
+                    }
+                  >
+                    Reset
+                  </Button>
+                </div>
               </Media.Body>
             </Media>
 
             <Form.Group>
               <Form.Label>Kategori</Form.Label>
+
               <Form.Control
-                value={articleData.id_kategori || ''}
+                value={articleData.category.category_id || ''}
                 onChange={e => this.onValueChange(e)}
                 as="select"
                 className="custom-select"

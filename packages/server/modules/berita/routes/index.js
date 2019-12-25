@@ -11,6 +11,6 @@ module.exports = app => {
   app
     .route('/berita/:id')
     .get(beritaController.getBeritaDetail)
-    .put(beritaController.update)
+    .put(beritaController.upload.single('photo_url'), beritaController.update)
     .delete(beritaController.delete);
 };
