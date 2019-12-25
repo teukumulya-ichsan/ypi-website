@@ -4,6 +4,7 @@ import {
   Button,
   OverlayTrigger,
   Tooltip,
+  Badge,
   Form,
   Modal,
   Media
@@ -22,6 +23,7 @@ const { SearchBar } = Search;
 
 class CategoryBerita extends Component {
   state = {
+    // page: this.props.page,
     category: [],
     formCate: {},
     formEditCate: {},
@@ -172,7 +174,28 @@ class CategoryBerita extends Component {
       },
       {
         text: 'Status',
-        dataField: 'status'
+        dataField: 'status',
+        sort: true,
+        editable: false,
+        formatter: (cell, row) => {
+          switch (row.status) {
+            case 'ACTIVE':
+              return (
+                <Badge pill variant="success">
+                  ACTIVE
+                </Badge>
+              );
+            case 'INACTIVE':
+              return (
+                <Badge pill variant="info">
+                  INACTIVE
+                </Badge>
+              );
+
+            default:
+              return '';
+          }
+        }
       },
       {
         isDummyField: true,

@@ -32,9 +32,9 @@ class Berita extends Component {
   getBerita = () => {
     axios.get('http://localhost:4001/berita').then(res => {
       console.log(res.data);
-      // this.setState({
-      //   data: res.data.data
-      // });
+      this.setState({
+        data: res.data.data
+      });
     });
   };
 
@@ -207,8 +207,8 @@ class Berita extends Component {
               <Card className="mb-3">
                 <Card.Img
                   variant="top"
-                  // src={`${process.env.PUBLIC_URL}/img/avatars/IMG_0537.jpeg`}
-                  src={data.photo_url}
+                  // src={`http://localhost:3000/assets/images/berita/${data.photo_url}`}
+                  src={`${process.env.PUBLIC_URL}/img/berita/${data.photo_url}`}
                   alt="Card image cap"
                 />
                 <Card.Body>

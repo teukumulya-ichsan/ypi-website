@@ -3,9 +3,11 @@ const BeritaService = require('@berita/services');
 const multer = require('multer');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
 
+console.log();
 const diskstorage = multer.diskStorage({
-  destination: './assets/images/berita',
+  destination: `${__dirname}/../../../../client/public/img/berita`,
   filename: async function(req, file, cb) {
     let ext = path.extname(file.originalname);
     let hashname = await bcrypt.hash(file.originalname, 8);
@@ -64,11 +66,10 @@ class BeritaController {
 
   async update(req, res) {
     const beritaId = req.params.id;
-    const beritaData = req.body;
 
     // console.log(beritaData);
 
-    const updateBerita = await this.beritaService.update(beritaId, beritaData);
+    const updateBerita = await this.beritaService.update(beritaId, req);
 
     res.status(updateBerita.status);
 

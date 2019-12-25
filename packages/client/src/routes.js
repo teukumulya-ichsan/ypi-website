@@ -7,6 +7,8 @@ import Loader from './shared/Loader';
 import Layout from './shared/layouts/Layout';
 import LayoutBlank from './shared/layouts/LayoutBlank';
 
+import Category from './components/Berita/Category';
+
 // Lazy load component
 const lazy = cb =>
   loadable(() => pMinDelay(cb(), 200), { fallback: <Loader /> });
@@ -91,7 +93,8 @@ export const routes = [
     path: '/likes/events',
     component: lazy(() => import('./components/Likes/Event'))
   },
-  // Not yet Route
+
+  //* Not yet Route
 
   {
     path: '/account',

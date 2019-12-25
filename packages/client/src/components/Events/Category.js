@@ -4,6 +4,7 @@ import {
   Button,
   OverlayTrigger,
   Tooltip,
+  Badge,
   Form,
   Modal,
   Media
@@ -170,7 +171,28 @@ class CategoryEvent extends Component {
       },
       {
         text: 'Status',
-        dataField: 'status'
+        dataField: 'status',
+        sort: true,
+        editable: false,
+        formatter: (cell, row) => {
+          switch (row.status) {
+            case 'ACTIVE':
+              return (
+                <Badge pill variant="success">
+                  ACTIVE
+                </Badge>
+              );
+            case 'INACTIVE':
+              return (
+                <Badge pill variant="info">
+                  INACTIVE
+                </Badge>
+              );
+
+            default:
+              return '';
+          }
+        }
       },
       {
         isDummyField: true,
