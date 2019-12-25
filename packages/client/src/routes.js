@@ -72,7 +72,7 @@ export const routes = [
   },
   {
     path: '/events/category',
-    component: lazy(() => import('./components/Events/Category'))
+    component: lazy(() => import('./components/Berita/Category'))
   },
 
   {
