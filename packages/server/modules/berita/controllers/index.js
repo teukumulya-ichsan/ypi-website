@@ -5,7 +5,6 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 
-console.log();
 const diskstorage = multer.diskStorage({
   destination: `${__dirname}/../../../../client/public/img/berita`,
   filename: async function(req, file, cb) {
@@ -47,8 +46,9 @@ class BeritaController {
   }
 
   async create(req, res) {
-    console.log(req.file);
-    req.body.photo_url = req.file.filename || '';
+    // console.log(req.file);
+    req.body.photo_url = req.file ? req.file.filename : '';
+
     const saveBerita = await this.beritaService.create(req.body);
 
     res.status(saveBerita.status);

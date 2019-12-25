@@ -126,27 +126,18 @@ class Events extends Component {
       },
       {
         text: 'Category',
-        dataField: 'category.category_id',
+        dataField: 'category.category_name',
         sort: true,
         editable: false,
+        formatter: cell => {
+          const random = Math.floor(Math.random() * 10);
+          const color = random <= 4 ? 'danger' : 'info';
 
-        formatter: (cell, row) => {
-          switch (row.category.category_id) {
-            case 1:
-              return (
-                <Badge pill variant="danger">
-                  Event Umum
-                </Badge>
-              );
-            case 2:
-              return (
-                <Badge pill variant="info">
-                  Kajian
-                </Badge>
-              );
-            default:
-              return '';
-          }
+          return (
+            <Badge pill variant={color}>
+              {cell}
+            </Badge>
+          );
         }
       },
 
@@ -188,9 +179,8 @@ class Events extends Component {
               <Card className="mb-3">
                 <Card.Img
                   variant="top"
-                  // src={`${process.env.PUBLIC_URL}/img/avatars/IMG_0537.jpeg`}
-                  src={events.photo_url}
-                  alt="Card image cap"
+                  src={`${process.env.PUBLIC_URL}/img/events/${events.photo_url}`}
+                  alt=""
                 />
                 <Card.Body>
                   <Card.Title as="h4">
