@@ -31,6 +31,7 @@ class FormBerita extends Component {
   };
 
   componentDidMount = async () => {
+    // console.log('PATH', this.props.location.pathname);
     this.getCategory();
     if (this.props.match.params.id) {
       const { id } = this.props.match.params;

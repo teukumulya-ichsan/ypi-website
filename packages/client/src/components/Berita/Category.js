@@ -28,15 +28,22 @@ class CategoryBerita extends Component {
     formCate: {},
     formEditCate: {},
     edit: false,
-    modalShow: false
+    modalShow: false,
+    page: '',
+    link: ''
   };
 
-  componentDidMount() {
+  componentDidMount = async () => {
+    let page =
+      this.props.location.pathname == '/berita/category' ? 'Berita' : 'Event';
+    let link = page == 'Berita' ? 'category-berita' : 'category-event';
+
+    await this.setState({ page: page, link: link });
     this.getCategory();
-  }
+  };
 
   getCategory = () => {
-    axios.get('http://localhost:4001/category-berita').then(res => {
+    axios.get('http://localhost:4001/' + this.state.link).then(res => {
       // console.log(res.data);
       this.setState({
         category: res.data.data
@@ -47,7 +54,7 @@ class CategoryBerita extends Component {
   handleModal = async (id = '') => {
     if (id !== '') {
       const { data } = await axios.get(
-        `http://localhost:4001/category-berita/${id}`
+        `http://localhost:4001/${this.state.link}/${id}`
       );
 
       if (data.data.status === 200) {
@@ -62,16 +69,16 @@ class CategoryBerita extends Component {
   };
 
   handleSubmit = async () => {
-    const { formCate, formEditCate, edit } = this.state;
+    const { formCate, formEditCate, edit, link } = this.state;
     let sendData = {};
 
     if (!edit) {
-      sendData = await axios.post('http://localhost:4001/category-berita', {
+      sendData = await axios.post('http://localhost:4001/' + link, {
         ...formCate
       });
     } else {
       sendData = await axios.put(
-        `http://localhost:4001/category-berita/${formCate.id}`,
+        `http://localhost:4001/${link}/${formCate.id}`,
         {
           ...formEditCate
         }
@@ -124,7 +131,7 @@ class CategoryBerita extends Component {
     }).then(async result => {
       if (result.value) {
         const { status } = await axios.delete(
-          `http://localhost:4001/category-berita/${id}`
+          `http://localhost:4001/${this.state.link}/${id}`
         );
 
         if (status === 200) {
@@ -145,7 +152,7 @@ class CategoryBerita extends Component {
 
   render() {
     const isIE10Mode = document['documentMode'] === 10;
-    const { formCate, edit } = this.state;
+    const { formCate, edit, page } = this.state;
 
     function dateFormatter(cell) {
       return <span>{moment(cell).format('D MMMM YYYY, H:mm')}</span>;
@@ -231,7 +238,7 @@ class CategoryBerita extends Component {
       <div>
         <h4 className="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
           <div>
-            <span className="ion ion-md-bookmarks"></span> Kategori Berita
+            <span className="ion ion-md-bookmarks"></span> Kategori {page}
           </div>
           <Button
             onClick={() => this.handleModal()}
@@ -245,7 +252,7 @@ class CategoryBerita extends Component {
             <Modal.Header closeButton>
               <Modal.Title as="h5">
                 {edit ? 'Update' : 'Tambah'}
-                <span className="font-weight-light"> Kategori Berita</span>
+                <span className="font-weight-light"> Kategori {page}</span>
                 <br />
               </Modal.Title>
             </Modal.Header>
