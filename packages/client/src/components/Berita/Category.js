@@ -91,7 +91,7 @@ class CategoryBerita extends Component {
   };
 
   closeForm = () => {
-    this.setState({ modalShow: false, formCate: '' });
+    this.setState({ modalShow: false, formCate: '', edit: false });
   };
 
   onValueChange = ({ target }) => {
@@ -295,7 +295,7 @@ class CategoryBerita extends Component {
                   className="custom-select"
                   name="status"
                 >
-                  <option value="">Pilih Kategori Berita</option>
+                  <option value="">Set Status</option>
                   <option value="ACTIVE">ACTIVE</option>
                   <option value="INACTIVE">INACTIVE</option>
                 </Form.Control>

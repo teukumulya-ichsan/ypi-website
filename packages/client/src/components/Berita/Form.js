@@ -26,10 +26,12 @@ class FormBerita extends Component {
     mainFileSelect: null,
     edit: false,
     redirect: false,
-    preview: `${process.env.PUBLIC_URL}/img/no-img.png`
+    preview: `${process.env.PUBLIC_URL}/img/no-img.png`,
+    category: []
   };
 
   componentDidMount = async () => {
+    this.getCategory();
     if (this.props.match.params.id) {
       const { id } = this.props.match.params;
       const { data } = await axios.get(`http://localhost:4001/berita/${id}`);
@@ -41,7 +43,10 @@ class FormBerita extends Component {
             : 'no-img.png';
 
         this.setState({
-          articleData: data.data,
+          articleData: {
+            ...data.data,
+            id_kategori: data.data.category.category_id
+          },
           preview: `${process.env.PUBLIC_URL}/img/` + preview,
           edit: true,
 
@@ -49,6 +54,15 @@ class FormBerita extends Component {
         });
       }
     }
+  };
+
+  getCategory = () => {
+    axios.get('http://localhost:4001/category-berita').then(res => {
+      console.log(res.data);
+      this.setState({
+        category: res.data.data
+      });
+    });
   };
 
   onValueChange = ({ target }) => {
@@ -76,6 +90,7 @@ class FormBerita extends Component {
         konten: value
       }
     });
+
     if (this.state.edit) {
       this.setState({
         articleEdit: {
@@ -128,7 +143,7 @@ class FormBerita extends Component {
         formData.append(item, articleData[item]);
       });
       formData.append('status', status);
-
+      // console.log(formData);
       sendData = await axios.post('http://localhost:4001/berita', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -310,15 +325,16 @@ class FormBerita extends Component {
               <Form.Label>Kategori</Form.Label>
 
               <Form.Control
-                value={articleData.category.category_id || ''}
+                value={articleData.id_kategori || ''}
                 onChange={e => this.onValueChange(e)}
                 as="select"
                 className="custom-select"
                 name="id_kategori"
               >
                 <option value="">Pilih Kategori Berita</option>
-                <option value="1">Berita</option>
-                <option value="2">Pages</option>
+                {this.state.category.map(item => (
+                  <option value={item.id}>{item.nama}</option>
+                ))}
               </Form.Control>
             </Form.Group>
           </Card.Body>

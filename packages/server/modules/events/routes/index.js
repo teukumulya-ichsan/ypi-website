@@ -6,11 +6,11 @@ module.exports = app => {
   app
     .route('/events')
     .get(eventController.index)
-    .post(eventController.create);
+    .post(eventController.upload.single('photo_url'), eventController.create);
 
   app
     .route('/events/:id')
     .get(eventController.getEventDetail)
-    .put(eventController.update)
+    .put(eventController.upload.single('photo_url'), eventController.update)
     .delete(eventController.delete);
 };

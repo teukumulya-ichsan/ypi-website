@@ -116,39 +116,18 @@ class Berita extends Component {
 
       {
         text: 'Category',
-        dataField: 'category.category_id',
+        dataField: 'category.category_name',
         sort: true,
         editable: false,
-        // editor: {
-        //   type: Type.SELECT,
-        //   option: [
-        //     { value: "Post", label: "Post" },
-        //     { value: "Pages", label: "Pages" }
-        //   ]
-        // },
-        formatter: (cell, row) => {
-          switch (row.category.category_id) {
-            case 1:
-              return (
-                <Badge pill variant="danger">
-                  Pengumuman
-                </Badge>
-              );
-            case 2:
-              return (
-                <Badge pill variant="info">
-                  Seputar Sekolah
-                </Badge>
-              );
-            case 3:
-              return (
-                <Badge pill variant="warning">
-                  Kajian
-                </Badge>
-              );
-            default:
-              return '';
-          }
+        formatter: cell => {
+          const random = Math.floor(Math.random() * 10);
+          const color = random <= 4 ? 'danger' : 'info';
+
+          return (
+            <Badge pill variant={color}>
+              {cell}
+            </Badge>
+          );
         }
       },
 
@@ -209,7 +188,7 @@ class Berita extends Component {
                   variant="top"
                   // src={`http://localhost:3000/assets/images/berita/${data.photo_url}`}
                   src={`${process.env.PUBLIC_URL}/img/berita/${data.photo_url}`}
-                  alt="Card image cap"
+                  alt=""
                 />
                 <Card.Body>
                   <Card.Title as="h4">
