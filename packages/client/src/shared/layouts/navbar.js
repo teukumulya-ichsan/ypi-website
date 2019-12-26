@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { NavLink, Redirect } from 'react-router-dom';
 import {
   Navbar,
   Nav,
@@ -10,14 +10,30 @@ import {
   Badge,
   ListGroup,
   Media
-} from "react-bootstrap";
-import layoutHelpers from "./helpers";
+} from 'react-bootstrap';
+import layoutHelpers from './helpers';
 
 class LayoutNavbar extends Component {
   constructor(props) {
     super(props);
-    this.isRTL = document.documentElement.getAttribute("dir") === "rtl";
+    this.isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+    this.state = {
+      navigate: false,
+      userLogged: { ...localStorage }
+    };
   }
+
+  // componentDidMount() {
+  //   const items = { ...localStorage };
+  //   this.setState({
+  //     data: items
+  //   });
+  // }
+
+  logout = () => {
+    localStorage.clear();
+    this.setState({ navigate: true });
+  };
 
   toggleSidenav(e) {
     e.preventDefault();
@@ -25,6 +41,12 @@ class LayoutNavbar extends Component {
   }
 
   render() {
+    const { navigate, userLogged } = this.state;
+
+    if (navigate) {
+      return <Redirect to="/" push={true} />;
+    }
+
     return (
       <Navbar
         bg={this.props.navbarBg}
@@ -74,7 +96,7 @@ class LayoutNavbar extends Component {
                 ></linearGradient>
               </defs>
               <path
-                style={{ fill: "#fff" }}
+                style={{ fill: '#fff' }}
                 transform="translate(-.1)"
                 d="M121.36,0,104.42,45.08,88.71,3.28A5.09,5.09,0,0,0,83.93,0H64.27A5.09,5.09,0,0,0,59.5,3.28L43.79,45.08,26.85,0H.1L29.43,76.74A5.09,5.09,0,0,0,34.19,80H53.39a5.09,5.09,0,0,0,4.77-3.26L74.1,35l16,41.74A5.09,5.09,0,0,0,94.82,80h18.95a5.09,5.09,0,0,0,4.76-3.24L148.1,0Z"
               ></path>
@@ -128,7 +150,7 @@ class LayoutNavbar extends Component {
                 <FormControl
                   className="navbar-text mx-2"
                   placeholder="Search..."
-                  style={{ width: "200px" }}
+                  style={{ width: '200px' }}
                 />
               </span>
             </label>
@@ -241,7 +263,7 @@ class LayoutNavbar extends Component {
                     alt="User"
                   />
                   <span className="px-1 mr-lg-2 ml-2 ml-lg-0">
-                    Teuku Mulia Ichsan
+                    {userLogged.name}
                   </span>
                 </span>
               </Dropdown.Toggle>
@@ -257,7 +279,7 @@ class LayoutNavbar extends Component {
                   Account settings
                 </Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item hred="#">
+                <Dropdown.Item onClick={this.logout}>
                   <i className="ion ion-ios-log-out text-danger"></i> &nbsp; Log
                   Out
                 </Dropdown.Item>

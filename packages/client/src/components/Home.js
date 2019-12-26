@@ -20,7 +20,7 @@ class Home extends Component {
             className="ui-w-50 rounded-circle"
           />
           <Media.Body className="ml-3">
-            Welcome back, Teuku Mulia Ichsan!
+            Welcome back, {localStorage.getItem('name')}!
             <div className="text-muted text-tiny mt-1">
               <small className="font-weight-normal">
                 Today is Tuesday, 8 February 2018

@@ -58,12 +58,17 @@ class FormBerita extends Component {
   };
 
   getCategory = () => {
-    axios.get('http://localhost:4001/category-berita').then(res => {
-      console.log(res.data);
-      this.setState({
-        category: res.data.data
+    axios
+      .get('http://localhost:4001/category-berita', {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('_token')
+        }
+      })
+      .then(res => {
+        this.setState({
+          category: res.data.data
+        });
       });
-    });
   };
 
   onValueChange = ({ target }) => {
@@ -144,10 +149,11 @@ class FormBerita extends Component {
         formData.append(item, articleData[item]);
       });
       formData.append('status', status);
-      // console.log(formData);
+
       sendData = await axios.post('http://localhost:4001/berita', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer ' + localStorage.getItem('_token')
         }
       });
     } else {
@@ -161,7 +167,8 @@ class FormBerita extends Component {
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + localStorage.getItem('_token')
           }
         }
       );
@@ -223,10 +230,7 @@ class FormBerita extends Component {
             />
             <div className="media-body ml-3">
               <a href="#d" onClick={this.prevent} className="text-body d-block">
-                <strong>
-                  {/* {this.state.articleData.author.name} */}
-                  Teuku Mulia Ichsan
-                </strong>
+                {/* <strong>{articleData.create_user || ''}</strong> */}
               </a>
               {/* Created at {this.state.articleData.created_at} */}
               Dibuat pada 27 November 2019

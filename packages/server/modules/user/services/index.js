@@ -53,16 +53,18 @@ class UserService {
       const token = jwt.sign(payload, jwtOptions.secretOrKey, {
         expiresIn: 300
       });
-      return {
-        status: HttpStatus.OK,
+
+      const data = {
+        id: user[0].user_id,
+        name: user[0].name,
         token: token
       };
-    }
 
-    return {
-      status: HttpStatus.UNAUTHORIZED,
-      message: 'wrong password'
-    };
+      return {
+        status: HttpStatus.OK,
+        data
+      };
+    }
   }
 
   async create(data) {
