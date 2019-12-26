@@ -30,14 +30,17 @@ export const titleTemplate = '%s - YPI';
 // behaviour, pass "exact" option explicitly to the route object
 
 export const defaultRoute = '/';
+
 export const routes = [
   //* Pages Login
   {
     path: '/login',
     component: lazy(() => import('./components/pages/Login')),
     layout: LayoutBlank
-  },
+  }
+];
 
+export const authRoutes = [
   {
     path: '/',
     component: lazy(() => import('./components/Home'))
@@ -93,16 +96,10 @@ export const routes = [
     path: '/likes/events',
     component: lazy(() => import('./components/Likes/Event'))
   },
-
-  //* Not yet Route
-
-  {
-    path: '/account',
-    component: lazy(() => import('./components/Users/Account'))
-  },
-
   {
     path: '/tags',
     component: lazy(() => import('./components/Tag'))
   }
+
+  //* Not yet Route
 ];

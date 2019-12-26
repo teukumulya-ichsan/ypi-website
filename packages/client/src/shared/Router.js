@@ -8,7 +8,13 @@ import {
 import NotFound from './NotFound';
 
 // Routes
-import { DefaultLayout, titleTemplate, defaultRoute, routes } from '../routes';
+import {
+  DefaultLayout,
+  titleTemplate,
+  defaultRoute,
+  routes,
+  authRoutes
+} from '../routes';
 
 // ---
 // Main route component
@@ -19,6 +25,12 @@ class Router extends Component {
 
     // Set default layout
     this.routes = routes.map(route => {
+      route.layout = route.layout || DefaultLayout;
+      route.exact = typeof route.exact === 'undefined' ? true : route.exact;
+      return route;
+    });
+
+    this.authRoutes = authRoutes.map(route => {
       route.layout = route.layout || DefaultLayout;
       route.exact = typeof route.exact === 'undefined' ? true : route.exact;
       return route;
@@ -93,6 +105,41 @@ class Router extends Component {
     return (
       <AppRouter basename={process.env.REACT_APP_BASENAME}>
         <Switch>
+          {this.authRoutes.map(route => (
+            <Route
+              path={route.path}
+              exact={route.exact}
+              render={props => {
+                // On small screens collapse sidenav
+                if (
+                  window.layoutHelpers &&
+                  window.layoutHelpers.isSmallScreen()
+                ) {
+                  window.layoutHelpers.setCollapsed(true, false);
+                }
+
+                // Scroll page to top on route render
+                this.scrollTop(0, 0);
+
+                // Return layout
+                if (localStorage.getItem('_token')) {
+                  return (
+                    <route.layout {...props}>
+                      <route.component
+                        {...props}
+                        setTitle={this.setTitle}
+                        scrollTop={this.scrollTop}
+                      />
+                    </route.layout>
+                  );
+                } else {
+                  return <Redirect to="/login" exact={true} />;
+                }
+              }}
+              key={route.path}
+            />
+          ))}
+
           {this.routes.map(route => (
             <Route
               path={route.path}
