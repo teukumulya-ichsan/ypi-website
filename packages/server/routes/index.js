@@ -6,18 +6,21 @@ const commentsRoute = require('@comments/routes');
 const likesRoute = require('@likes/routes');
 
 module.exports = (app, passport) => {
-  app.route('/').get((req, res) => {
-    res.send('Started from Here!!');
-  });
+  const privateRoute = passport.authenticate('jwt', { session: false });
 
-  app.get('/protected', passport.authenticate('jwt', { session: false }), function(req, res) {
-    res.json('Success! You can now see this without a token.');
-  });
+  //! TEST ROUTE AND PASSPORT
+  // app.route('/').get((req, res) => {
+  //   res.send('Started from Here!!');
+  // });
 
-  userRoute(app);
-  beritaRoute(app, passport);
-  eventRoute(app);
-  categoryRoute(app);
-  commentsRoute(app);
-  likesRoute(app);
+  // app.get('/protected', passport.authenticate('jwt', { session: false }), function(req, res) {
+  //   res.json('Success! You can now see this without a token.');
+  // });
+
+  userRoute(app, privateRoute);
+  beritaRoute(app, privateRoute);
+  eventRoute(app, privateRoute);
+  categoryRoute(app, privateRoute);
+  commentsRoute(app, privateRoute);
+  likesRoute(app, privateRoute);
 };

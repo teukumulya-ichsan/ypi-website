@@ -15,8 +15,7 @@
     "server:add": "yarn workspace server add",
     "client:add": "yarn workspace client add",
     "server:remove": "yarn workspace server remove",
-    "client:remove": "yarn workspace client remove",
-    "app": "yarn client yarn server"
+    "client:remove": "yarn workspace client remove"
   },
   "dependencies": {
     "concurrently": "^5.0.2"

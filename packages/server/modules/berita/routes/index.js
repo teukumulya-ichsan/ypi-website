@@ -5,12 +5,20 @@ module.exports = (app, passport) => {
 
   app
     .route('/berita')
-    .get(passport.authenticate('jwt', { session: false }), beritaController.index)
-    .post(beritaController.upload.single('photo_url'), beritaController.create);
+    .get(beritaController.index)
+    .post(
+      passport,
+      beritaController.upload.single('photo_url'),
+      beritaController.create
+    );
 
   app
     .route('/berita/:id')
     .get(beritaController.getBeritaDetail)
-    .put(beritaController.upload.single('photo_url'), beritaController.update)
-    .delete(beritaController.delete);
+    .put(
+      passport,
+      beritaController.upload.single('photo_url'),
+      beritaController.update
+    )
+    .delete(passport, beritaController.delete);
 };

@@ -1,6 +1,6 @@
 const CommentController = require('@comments/controllers');
 
-module.exports = app => {
+module.exports = (app, passport) => {
   const commentController = new CommentController();
 
   //* Berita Route
@@ -12,8 +12,8 @@ module.exports = app => {
   app
     .route('/comments-berita/:id')
     .get(commentController.getCommentBeritaDetail)
-    .put(commentController.updateCommentBerita)
-    .delete(commentController.deleteCommentBerita);
+    .put(passport, commentController.updateCommentBerita)
+    .delete(passport, commentController.deleteCommentBerita);
 
   //* Event Route //
   app
@@ -24,6 +24,6 @@ module.exports = app => {
   app
     .route('/comments-event/:id')
     .get(commentController.getCommentEventDetail)
-    .put(commentController.updateCommentEvent)
-    .delete(commentController.deleteCommentEvent);
+    .put(passport, commentController.updateCommentEvent)
+    .delete(passport, commentController.deleteCommentEvent);
 };

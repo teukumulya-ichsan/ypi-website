@@ -57,7 +57,7 @@ class Login extends Component {
       <div
         className="authentication-wrapper authentication-2 ui-bg-cover ui-bg-overlay-container px-4"
         style={{
-          backgroundImage: `url('${process.env.PUBLIC_URL}/img/bg/1.jpg')`
+          backgroundImage: `url('${process.env.PUBLIC_URL}/img/1.jpg')`
         }}
       >
         <div className="ui-bg-overlay bg-dark opacity-25"></div>
