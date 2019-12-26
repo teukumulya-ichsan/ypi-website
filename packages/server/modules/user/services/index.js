@@ -29,7 +29,7 @@ class UserService {
   }
 
   async login(data) {
-    const { email, password } = data
+    const { email, password } = data;
 
     const user = await this.userModel.getUserByEmail(email);
     console.log(user.length);
@@ -38,30 +38,31 @@ class UserService {
       return {
         status: HttpStatus.UNAUTHORIZED,
         message: 'User not found'
-      }
+      };
     }
 
-    const hashPassword = user[0].password
-    const id = user[0].id
-    
-    const checkPassword = brcypt.compareSync(password, hashPassword); 
+    const hashPassword = user[0].password;
+    const id = user[0].id;
+
+    const checkPassword = brcypt.compareSync(password, hashPassword);
 
     if (checkPassword) {
-      const jwtOptions = {}
+      const jwtOptions = {};
       jwtOptions.secretOrKey = process.env.JWT_SECRET;
       const payload = { id };
-      const token = jwt.sign(payload, jwtOptions.secretOrKey);
+      const token = jwt.sign(payload, jwtOptions.secretOrKey, {
+        expiresIn: 300
+      });
       return {
         status: HttpStatus.OK,
         token: token
-      }
+      };
     }
 
     return {
       status: HttpStatus.UNAUTHORIZED,
-      message: 'wrong password',
-    }
-  
+      message: 'wrong password'
+    };
   }
 
   async create(data) {
