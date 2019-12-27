@@ -181,7 +181,8 @@ class FormEvent extends Component {
 
       sendData = await Axios.post('http://localhost:4001/events', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer ' + localStorage.getItem('_token')
         }
       });
     } else {
@@ -197,7 +198,8 @@ class FormEvent extends Component {
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + localStorage.getItem('_token')
           }
         }
       );

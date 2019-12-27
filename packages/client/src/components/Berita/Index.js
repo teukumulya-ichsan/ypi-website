@@ -51,7 +51,12 @@ class Berita extends Component {
     }).then(async result => {
       if (result.value) {
         const { status } = await axios.delete(
-          `http://localhost:4001/berita/${id}`
+          `http://localhost:4001/berita/${id}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('_token')
+            }
+          }
         );
 
         if (status === 200) {
